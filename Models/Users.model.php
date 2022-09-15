@@ -1,15 +1,15 @@
 <?php
 
-require_once 'conexion.php';
+require_once 'Conetion.php';
 
-class ModeloUsuarios{
+class UsersModel{
 
     /*=============================================
     Ver información usuarios      
     =============================================*/
     static public function mdlIndex($tabla){
 
-        $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla");
+        $stmt = Conetion::connect()->prepare("SELECT * FROM $tabla");
 
         $stmt -> execute();
 
@@ -25,7 +25,7 @@ class ModeloUsuarios{
     =============================================*/
     static public function mdlShow($tabla, $correo, $password){
 
-        $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE correo = '$correo' AND password = '$password'");
+        $stmt = Conetion::connect()->prepare("SELECT * FROM $tabla WHERE correo = '$correo' AND password = '$password'");
 
         $stmt -> execute();
 
@@ -41,7 +41,7 @@ class ModeloUsuarios{
     ======================================*/
    static public function mdlCreate( $table, $data)
    {
-   		$stmt = Conexion::conectar()->prepare("INSERT INTO $table( nombre ) VALUES ( :nombre )");
+   		$stmt = Conetion::connect()->prepare("INSERT INTO $table( nombre ) VALUES ( :nombre )");
 
    		$stmt->bindParam(":nombre", $data['nombre'], PDO::PARAM_STR);
 
@@ -64,7 +64,7 @@ class ModeloUsuarios{
     ======================================*/
    static public function mdlUpdateQuestion( $table, $data)
    {
-   		$stmt = Conexion::conectar()->prepare("UPDATE $table SET pregunta = :pregunta, opciones = :opciones, genero = :genero, formula_auto = :formula, longitud = :longitud  WHERE id = :id");
+   		$stmt = Conetion::connect()->prepare("UPDATE $table SET pregunta = :pregunta, opciones = :opciones, genero = :genero, formula_auto = :formula, longitud = :longitud  WHERE id = :id");
 
 		$stmt->bindParam(":pregunta", $data['pregunta'], PDO::PARAM_STR);
 		$stmt->bindParam(":opciones", $data['opciones'], PDO::PARAM_STR);

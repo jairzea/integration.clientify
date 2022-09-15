@@ -1,6 +1,6 @@
 <?php
 
-class ControladorUsuarios{
+class UsersController{
     
     /*=============================================
     Mostrar toda los leads      
@@ -11,7 +11,7 @@ class ControladorUsuarios{
             
             $tabla = 'leads';
 
-            $usuarios = ModeloUsuarios::mdlIndex($tabla);
+            $usuarios = UsersModel::mdlIndex($tabla);
 
             if (count($usuarios)==0) {
                 
@@ -52,10 +52,6 @@ class ControladorUsuarios{
             
             return;
         }
-
-        
-
-
     }
 
   
@@ -75,7 +71,7 @@ class ControladorUsuarios{
 
             // return;
 
-            $answer = ModeloUsuarios::mdlCreate( $table, $data );
+            $answer = UsersModel::mdlCreate( $table, $data );
 
             if ( $answer == 'ok' ) {
 
@@ -119,7 +115,7 @@ class ControladorUsuarios{
                            'formula'        => $values['formula'],
                            'id'             => $values['id'] );
 
-            $answer = ModeloUsuarios::mdlUpdateQuestion( $table, $data );
+            $answer = UsersModel::mdlUpdateQuestion( $table, $data );
 
             if ( $answer == 'ok' ) {
 
@@ -156,7 +152,7 @@ class ControladorUsuarios{
         $correo = $datos['correo'];
         $password = $datos['password'];
 
-        $usuarios = ModeloUsuarios::mdlShow($tabla, $correo, $password);
+        $usuarios = UsersModel::mdlShow($tabla, $correo, $password);
 
         if (!empty($usuarios)) {
 

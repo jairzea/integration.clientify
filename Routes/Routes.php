@@ -9,20 +9,24 @@ $arrayRutas = explode('/', $_SERVER['REQUEST_URI']);
 /*=============================================
 Cuando se hace una peticion a la api       
 =============================================*/
-if (count(array_filter($arrayRutas)) == 0) {
+if (count(array_filter($arrayRutas)) == 1) {
+
     
-    $json = array(
+
+    echo $_ENV['API_VERSION'];
+    
+    /*$json = array(
 
         "detalle"=>"no encontrado"
     );
 
-    echo json_encode($json, true);
+    echo json_encode($json, true);*/
 
     return;
 
 }else{
 
-    if (count(array_filter($arrayRutas)) == 1) {
+    if (count(array_filter($arrayRutas)) == 2) {
 
         $consulta = explode('?', array_filter($arrayRutas)[1]);
 
