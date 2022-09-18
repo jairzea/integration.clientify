@@ -8,12 +8,16 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 
 $arrayRutas = explode('/', $_SERVER['REQUEST_URI']);
 
+if($_ENV['TYPE_VHOST'] == 'subdomain'){
+    $index = 0;
+}else{
+    $index = 1;
+}
+
 /*=============================================
 Cuando se hace una peticion a la api       
 =============================================*/
-if (count(array_filter($arrayRutas)) == 1) {
-
-    echo $_ENV['API_VERSION'];
+if (count(array_filter($arrayRutas)) == $index) {
     
     $json = array(
 
@@ -26,7 +30,7 @@ if (count(array_filter($arrayRutas)) == 1) {
 
 }else{
 
-    if (count(array_filter($arrayRutas)) == 2) {
+    if (count(array_filter($arrayRutas)) == $index + 1) {
        
         $consulta = explode('/', array_filter($arrayRutas)[2]);
 
