@@ -1,5 +1,7 @@
 <?php
 
+use Controllers\UsersController;
+
 header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
@@ -11,24 +13,22 @@ Cuando se hace una peticion a la api
 =============================================*/
 if (count(array_filter($arrayRutas)) == 1) {
 
-    
-
     echo $_ENV['API_VERSION'];
     
-    /*$json = array(
+    $json = array(
 
         "detalle"=>"no encontrado"
     );
 
-    echo json_encode($json, true);*/
+    echo json_encode($json, true);
 
     return;
 
 }else{
 
     if (count(array_filter($arrayRutas)) == 2) {
-
-        $consulta = explode('?', array_filter($arrayRutas)[1]);
+       
+        $consulta = explode('/', array_filter($arrayRutas)[2]);
 
         /*=============================================
         OBTENER TOKEN      
@@ -62,18 +62,17 @@ if (count(array_filter($arrayRutas)) == 1) {
             /*-- Obtener todos los leads --*/
             if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'GET') {
 
-                $leads = new ControladorUsuarios();
-                $leads->ctrIndex();
+                try {
+                   
+                    $leads = new UsersController();
+                    $leads->ctrIndex();
 
-                // try {
-                //     //code...
-                // } catch (\Throwable $th) {
-                //     //throw $th;
-                // }
-                // echo 'entt';
+                } catch (Exception $e) {
 
-               
-               
+                    new Helpers\ExceptionHandling($e);
+
+                }
+         
             }
 
             if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -81,11 +80,17 @@ if (count(array_filter($arrayRutas)) == 1) {
                 $data = json_decode(file_get_contents('php://input'), true);
 
                 // echo json_encode($data);
-                $leads = new ControladorUsuarios();
-                $leads->ctrCreate( $data );
+                $leads = new UsersController();
+                $leads->ctrStore( $data['data'] );
             }
 
     
+        }else{
+
+            http_response_code(404);
+
+            echo json_encode([$consulta[0] . ", Not Found"]);
+
         }
     
     }

@@ -1,9 +1,12 @@
 <?php
 
-require_once 'Controllers/Routes.controller.php';
-require_once 'Controllers/Users.controller.php';
+header('Content-type: application/json');
 
-require_once 'Models/Users.Models.php';
+use Controllers\RoutesController;
 
-$rutas = new ControladorRutas();
-$rutas -> index();
+spl_autoload_register(function ($class) {
+    require_once str_replace('\\', '/', $class) . '.php';
+});
+
+$routes = new RoutesController();
+$routes -> index();

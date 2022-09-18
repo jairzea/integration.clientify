@@ -1,15 +1,18 @@
 <?php
 
-require_once 'Conetion.php';
+namespace Models;
 
-class UsersModel{
+use Models\Conection;
+use PDO;
+
+class Users{
 
     /*=============================================
     Ver información usuarios      
     =============================================*/
     static public function mdlIndex($tabla){
 
-        $stmt = Conetion::connect()->prepare("SELECT * FROM $tabla");
+        $stmt = Conection::connect()->prepare("SELECT * FROM $tabla");
 
         $stmt -> execute();
 
@@ -25,7 +28,7 @@ class UsersModel{
     =============================================*/
     static public function mdlShow($tabla, $correo, $password){
 
-        $stmt = Conetion::connect()->prepare("SELECT * FROM $tabla WHERE correo = '$correo' AND password = '$password'");
+        $stmt = Conection::connect()->prepare("SELECT * FROM $tabla WHERE correo = '$correo' AND password = '$password'");
 
         $stmt -> execute();
 
@@ -37,26 +40,39 @@ class UsersModel{
     }
 
     /*======================================
-    =            Crear usuario            =
+    =            Crear leads            =
     ======================================*/
-   static public function mdlCreate( $table, $data)
+   static public function mdlStore( $table, $data)
    {
-   		$stmt = Conetion::connect()->prepare("INSERT INTO $table( nombre ) VALUES ( :nombre )");
 
-   		$stmt->bindParam(":nombre", $data['nombre'], PDO::PARAM_STR);
+        try {
+            
+            $stmt = Conection::connect()->prepare("INSERT INTO $table( name, email, id_clientify, response_object ) VALUES ( :first_name, :email, :id, :response_object )");
 
-		if($stmt->execute()){
+            $stmt->bindParam(":first_name", $data['first_name'], PDO::PARAM_STR);
+            $stmt->bindParam(":id", $data['id'], PDO::PARAM_STR);
+            $stmt->bindParam(":email", $data['email'], PDO::PARAM_STR);
+            $stmt->bindParam(":response_object", $data['response_object'], PDO::PARAM_STR);
 
-			return "ok";
+            if($stmt->execute()){
 
-		}else{
+                return "ok";
 
-			return $stmt->errorInfo();
-		
-		}
+            }else{
 
-		$stmt->close();
-		$stmt = null;
+                return $stmt->errorInfo();
+            
+            }
+
+            $stmt->close();
+            $stmt = null;
+            
+        } catch (Exception $e) {
+                
+            new Helpers\ExceptionHandling($e);
+            
+        }
+
    }
 
    /*======================================
@@ -64,7 +80,7 @@ class UsersModel{
     ======================================*/
    static public function mdlUpdateQuestion( $table, $data)
    {
-   		$stmt = Conetion::connect()->prepare("UPDATE $table SET pregunta = :pregunta, opciones = :opciones, genero = :genero, formula_auto = :formula, longitud = :longitud  WHERE id = :id");
+   		$stmt = Conection::connect()->prepare("UPDATE $table SET pregunta = :pregunta, opciones = :opciones, genero = :genero, formula_auto = :formula, longitud = :longitud  WHERE id = :id");
 
 		$stmt->bindParam(":pregunta", $data['pregunta'], PDO::PARAM_STR);
 		$stmt->bindParam(":opciones", $data['opciones'], PDO::PARAM_STR);

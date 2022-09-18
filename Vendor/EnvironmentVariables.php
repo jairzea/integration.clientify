@@ -1,6 +1,9 @@
 <?php
 
-class Settings
+namespace Vendor;
+
+class EnvironmentVariables
+
 {
     public function __construct()
     {
@@ -15,8 +18,8 @@ class Settings
                 continue;
             }
 
-            $key = $this->remove_quotes($vars[0]);
-            $val = $this->remove_quotes($vars[1]);
+            $key = $this->remove_character($vars[0]);
+            $val = $this->remove_character($vars[1]);
 
             $_ENV[$key]=$val;
             
@@ -25,8 +28,9 @@ class Settings
 
     }
 
-    public function remove_quotes($str)
+    public function remove_character($str)
     {
-        return str_replace('"', '', str_replace("'", '', $str));
+        $str= str_replace('"', '', str_replace("'", '', $str));
+        return trim($str, " \t\n\r\0\x0B");
     }
 }

@@ -1,5 +1,9 @@
 <?php
 
+namespace Controllers;
+
+use Models\Users;
+
 class UsersController{
     
     /*=============================================
@@ -11,7 +15,7 @@ class UsersController{
             
             $tabla = 'leads';
 
-            $usuarios = UsersModel::mdlIndex($tabla);
+            $usuarios = Users::mdlIndex($tabla);
 
             if (count($usuarios)==0) {
                 
@@ -48,7 +52,7 @@ class UsersController{
 
         } catch (Exception $e) {
 
-            echo json_encode($e, true);
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
             
             return;
         }
@@ -59,39 +63,49 @@ class UsersController{
     Mostrar toda la información de la pagina       
     =============================================*/
 
-    public function ctrCreate( $values ){
+    public function ctrStore( $values ){
 
         if ( isset( $values ) && !empty( $values )) {
-            
-            $table = 'leads';
 
-            $data = array( 'nombre' => json_encode($values) );
+            try {
+                
+                $table = 'leads';
 
-            // echo json_encode( $data );
-
-            // return;
-
-            $answer = UsersModel::mdlCreate( $table, $data );
-
-            if ( $answer == 'ok' ) {
-
-                $ans = array(
-                    "status" => 200,
-                    "detalle"=>"Usuario almacenado correctamente"
+                $data = array( 
+                    'first_name' => $values['first_name'],
+                    'id' => $values['id'],
+                    'email' => $values['emails'][0]['email'],
+                    'response_object' => json_encode($values),
                 );
 
-                echo json_encode($ans, true); 
+                $answer = Users::mdlStore( $table, $data );
 
-            }else{
+                if ( $answer == 'ok' ) {
 
-                $ans = array(
-                    "status" => 400,
-                    "detalle"=> "No se pudo almacenar la pregunta"
-                );
+                    $ans = array(
+                        "status" => 200,
+                        "detalle"=>"Leads almacenado correctamente"
+                    );
 
-                echo json_encode($ans, true); 
+                    echo json_encode($ans, true); 
 
+                }else{
+
+                    $ans = array(
+                        "status" => 400,
+                        "detalle"=> "No se pudo almacenar la pregunta"
+                    );
+
+                    echo json_encode($ans, true); 
+
+                }
+
+            } catch (Exception $e) {
+                
+                new Helpers\ExceptionHandling($e);
+                
             }
+            
         }
         
         return;
